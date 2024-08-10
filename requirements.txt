@@ -1,0 +1,9 @@
+django
+django-rest-framework
+aiogram
+python-dotenv
+pyTelegramBotAPI
+psycopg2
+psycopg2-binary
+django-heroku
+gunicorn
