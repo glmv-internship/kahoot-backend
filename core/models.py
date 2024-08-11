@@ -130,7 +130,25 @@ class PollOption(BaseLayer):
     class Meta:
         db_table = 'options'
 
-
+class Game(BaseLayer):
+    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, related_name='games')
+    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='games')
+    join_code = models.CharField(max_length=6, unique=True)
+    is_active = models.BooleanField(default=True)
+    players = models.ManyToManyField(User, related_name='games')
+    started_at = models.DateTimeField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    def __str__(self):
+        return f"{self.join_code} {self.quiz.name}"
+    
+class UserResult(BaseLayer):
+    game = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, related_name='results')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='results')
+    score = models.IntegerField(default=0)
+    nickname = models.CharField(max_length=30, null=True, blank=True)
+    joined_at = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f"{self.nickname or ''} {self.score}".lstrip()
 
 
 
