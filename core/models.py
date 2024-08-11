@@ -132,7 +132,7 @@ class PollOption(BaseLayer):
 
 class Game(BaseLayer):
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, related_name='quiz_games')
-    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='games')
+    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='hosted_games')
     join_code = models.CharField(max_length=6, unique=True)
     is_active = models.BooleanField(default=True)
     players = models.ManyToManyField(User, related_name='games')
