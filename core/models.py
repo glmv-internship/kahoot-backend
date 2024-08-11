@@ -131,7 +131,7 @@ class PollOption(BaseLayer):
         db_table = 'options'
 
 class Game(BaseLayer):
-    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, related_name='games')
+    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, related_name='quiz_games')
     host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='games')
     join_code = models.CharField(max_length=6, unique=True)
     is_active = models.BooleanField(default=True)
@@ -141,7 +141,7 @@ class Game(BaseLayer):
         return f"{self.join_code} {self.quiz.name}"
     
 class UserResult(BaseLayer):
-    game = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, related_name='results')
+    game = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, related_name='game_results')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='results')
     score = models.IntegerField(default=0)
     nickname = models.CharField(max_length=30, null=True, blank=True)
