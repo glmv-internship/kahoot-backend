@@ -137,7 +137,6 @@ class Game(BaseLayer):
     is_active = models.BooleanField(default=True)
     players = models.ManyToManyField(User, related_name='games')
     started_at = models.DateTimeField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
     def __str__(self):
         return f"{self.join_code} {self.quiz.name}"
     
