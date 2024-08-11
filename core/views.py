@@ -14,12 +14,12 @@ class UserCreate(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     
 class QuizDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
+    queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
     lookup_field = 'id'
     
 class QuizCreate(generics.ListCreateAPIView):
-    queryset = User.objects.all()
+    queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
 
 class AddPollToQuiz(views.APIView):
