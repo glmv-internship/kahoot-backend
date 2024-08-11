@@ -6,10 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
         
-class QuizSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Quiz
-        fields = '__all__'
+
         
 class PollOptionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,3 +25,9 @@ class PollSerializer(serializers.ModelSerializer):
         for option_data in options_data:
             PollOption.objects.create(poll=poll, **option_data)
         return poll
+
+class QuizSerializer(serializers.ModelSerializer):
+    polls = PollSerializer(many=True, read_only=True)
+    class Meta:
+        model = Quiz
+        fields = '__all__'
