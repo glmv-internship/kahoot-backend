@@ -6,5 +6,5 @@ urlpatterns = [
     path('users/<int:uid>/quizzes/', ShowUserQuizzes.as_view(),name='user_quizzes'),
     path('quiz/', QuizCreate.as_view(),name='quiz_create' ),
     path('quiz/<int:id>/', QuizDetail.as_view(),name='quiz_detail'),
-    path('quiz/<int:id>/add_poll', AddPollToQuiz.as_view(),name='quiz_add_poll')
+    path('quiz/<int:quiz_id>/add_poll', AddPollToQuiz.as_view(),name='quiz_add_poll')
 ]
