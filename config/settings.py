@@ -160,7 +160,6 @@ STATICFILES_DIRS = (
 )
 # BOT
 BOT_TOKEN = str(dotenv.dotenv_values().get('BOT_TOKEN'))
-print(BOT_TOKEN)
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
