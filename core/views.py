@@ -12,7 +12,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserCreate(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    
+
 class QuizDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer

@@ -78,7 +78,7 @@ class User(BaseLayer):
     """
     To store users
     """
-    uid = models.IntegerField(unique=True)
+    uid = models.CharField(max_length=40,unique=True)
     uuid = models.UUIDField(null=True, blank=True, default=None)
     nickname = models.CharField(max_length=30, null=True, blank=True)
     temp_data = models.TextField(null=True, blank=True)
@@ -92,8 +92,8 @@ class User(BaseLayer):
 
 class Quiz(BaseLayer):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='quizzes')
-    name = models.CharField(max_length=200,null=True, blank=True)
-    description = models.TextField()
+    name = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
     number_of_questions = models.IntegerField(default=0)
     duration = models.IntegerField(default=60)
     class Meta:
