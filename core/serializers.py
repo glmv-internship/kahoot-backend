@@ -29,3 +29,19 @@ class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = '__all__'
+        
+class GameSerializer(serializers.ModelSerializer):
+    join_code = serializers.CharField(read_only=True)
+    class Meta:
+        model = Game
+        fields = '__all__'
+        
+    def create(self, validated_data : dict):
+        quiz_id = validated_data.pop('quiz_id')
+        host_uid = validated_data.pop('host_uid')
+        quiz = Quiz.objects.get(pk=quiz_id)
+        host = User.objects.get(uid=host_uid)
+        join_code = Game.generate_join_code()
+        validated_data['join_code'] = join_code
+        game = Game.objects.create(quiz=quiz, host=host, **validated_data)
+        return game

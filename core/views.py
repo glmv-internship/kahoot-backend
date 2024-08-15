@@ -2,7 +2,7 @@ from core.models import User
 from rest_framework import generics,views,status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from core.serializers import UserSerializer, QuizSerializer, PollSerializer
+from core.serializers import UserSerializer, QuizSerializer, PollSerializer, GameSerializer
 from core.models import Quiz, Poll
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
@@ -23,7 +23,7 @@ class QuizCreate(generics.ListCreateAPIView):
     serializer_class = QuizSerializer
 
 class AddPollToQuiz(views.APIView):
-    def post(self, request, quiz_id):
+    def post(self, request, quiz_id):   
         try:
             quiz = Quiz.objects.get(pk=quiz_id)
         except Quiz.DoesNotExist:
@@ -47,3 +47,8 @@ class ShowUserQuizzes(views.APIView):
         
         quizzes = user.quizzes.all()
         return Response(QuizSerializer(quizzes, many=True).data)
+    
+class GamesList(generics.ListCreateAPIView):
+    queryset = Quiz.objects.all()
+    serializer_class = GameSerializer
+    

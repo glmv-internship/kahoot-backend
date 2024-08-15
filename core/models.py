@@ -96,6 +96,8 @@ class Quiz(BaseLayer):
     description = models.TextField(null=True, blank=True)
     number_of_questions = models.IntegerField(default=0)
     duration = models.IntegerField(default=60)
+    def __str__(self):
+        return f"{self.name} {self.number_of_questions} {self.duration}"
     class Meta:
         db_table = 'quizzes'
 class Poll(BaseLayer):
@@ -139,6 +141,8 @@ class Game(BaseLayer):
     started_at = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return f"{self.join_code} {self.quiz.name}"
+    def generate_join_code(self):
+        return uuid.uuid4().hex[:6].upper()
     
 class UserResult(BaseLayer):
     game = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, related_name='game_results')
