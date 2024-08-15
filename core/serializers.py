@@ -37,9 +37,10 @@ class GameSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
     def create(self, validated_data : dict):
-        quiz_id = validated_data.pop('quiz_id')
-        host_uid = validated_data.pop('host_uid')
-        quiz = Quiz.objects.get(pk=quiz_id)
+        print(validated_data)
+        quiz_id = validated_data.pop('quiz')
+        host_uid = validated_data.pop('host')
+        quiz = Quiz.objects.get(pk=quiz)
         host = User.objects.get(uid=host_uid)
         join_code = Game.generate_join_code()
         validated_data['join_code'] = join_code
