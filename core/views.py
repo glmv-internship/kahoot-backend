@@ -3,7 +3,7 @@ from rest_framework import generics,views,status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from core.serializers import UserSerializer, QuizSerializer, PollSerializer, GameSerializer
-from core.models import Quiz, Poll
+from core.models import Quiz, Poll, Game
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -49,6 +49,6 @@ class ShowUserQuizzes(views.APIView):
         return Response(QuizSerializer(quizzes, many=True).data)
     
 class GamesList(generics.ListCreateAPIView):
-    queryset = Quiz.objects.all()
+    queryset = Game.objects.all()
     serializer_class = GameSerializer
     
