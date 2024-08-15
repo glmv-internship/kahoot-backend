@@ -97,7 +97,7 @@ class Quiz(BaseLayer):
     number_of_questions = models.IntegerField(default=0)
     duration = models.IntegerField(default=60)
     def __str__(self):
-        return f"{self.name} {self.number_of_questions} {self.duration}"
+        return f"{self.name}"
     class Meta:
         db_table = 'quizzes'
 class Poll(BaseLayer):
@@ -135,14 +135,18 @@ class PollOption(BaseLayer):
 class Game(BaseLayer):
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True, related_name='quiz_games')
     host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='hosted_games')
-    join_code = models.CharField(max_length=6, unique=True)
+    join_code = models.CharField(max_length=6)
     is_active = models.BooleanField(default=True)
-    players = models.ManyToManyField(User, related_name='games')
+    players = models.ManyToManyField(User, related_name='games',blank=True)
     started_at = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return f"{self.join_code} {self.quiz.name}"
-    def generate_join_code(self):
-        return uuid.uuid4().hex[:6].upper()
+    def generate_join_code():
+        code = uuid.uuid4().hex[:6].upper()
+        while Game.objects.filter(is_active=True, join_code=code):
+            code = uuid.uuid4().hex[:6].upper()
+            
+        return code 
     
 class UserResult(BaseLayer):
     game = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, related_name='game_results')

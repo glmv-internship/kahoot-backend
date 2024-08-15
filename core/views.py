@@ -2,7 +2,7 @@ from core.models import User
 from rest_framework import generics,views,status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from core.serializers import UserSerializer, QuizSerializer, PollSerializer, GameSerializer
+from core.serializers import UserSerializer, QuizSerializer, PollSerializer, GameSerializer,GameDetailSerializer
 from core.models import Quiz, Poll, Game
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
@@ -51,4 +51,44 @@ class ShowUserQuizzes(views.APIView):
 class GamesList(generics.ListCreateAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
+    
+@api_view(['POST'])
+def add_player_to_game(self,game_code,user_id):
+    try:
+        user = User.objects.get(uid=user_id)
+    except:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    try: 
+        game = Game.objects.get(join_code=game_code)
+    except:
+        return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
+    if user.games.filter(is_active=True).exists():
+        return Response({'error': 'User already in game'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    game.players.add(user)
+    game.save()
+    
+    return Response(GameSerializer(game).data, status=status.HTTP_201_CREATED)
+@api_view(['POST'])
+def delete_player_from_game(self,game_code,user_id):
+    try:
+        user = User.objects.get(uid=user_id)
+    except:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    try: 
+        game = Game.objects.get(join_code=game_code)
+    except:
+        return Response({'error': 'Game not found'}, status=status.HTTP_404_NOT_FOUND)
+    if not game.players.contains(user):
+        return Response({'error': 'User not in this game'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    game.players.remove(user)
+    game.save()
+    
+    return Response(GameSerializer(game).data, status=status.HTTP_201_CREATED)
+
+class GameDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Game.objects.all()
+    serializer_class = GameDetailSerializer
+    lookup_field = 'join_code'
     

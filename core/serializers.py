@@ -31,18 +31,43 @@ class QuizSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class GameSerializer(serializers.ModelSerializer):
-    join_code = serializers.CharField(read_only=True)
+    host_uid = serializers.CharField(write_only=True)
+    host = UserSerializer(read_only=True)
     class Meta:
         model = Game
-        fields = '__all__'
+        fields = ['host','host_uid','created_time','quiz','join_code','is_active','started_at']
+        # depth = 1
+        read_only_fields = ['join_code','is_active','started_at','created_time']
+
         
     def create(self, validated_data : dict):
-        print(validated_data)
-        quiz_id = validated_data.pop('quiz')
-        host_uid = validated_data.pop('host')
-        quiz = Quiz.objects.get(pk=quiz)
+
+        host_uid=validated_data.pop('host_uid')
         host = User.objects.get(uid=host_uid)
         join_code = Game.generate_join_code()
         validated_data['join_code'] = join_code
-        game = Game.objects.create(quiz=quiz, host=host, **validated_data)
+        game = Game.objects.create(host=host,**validated_data)
         return game
+    def to_representation(self, instance):
+        return super().to_representation(instance)
+    
+class GameDetailSerializer(serializers.ModelSerializer):
+    host = UserSerializer(read_only=True)
+    players = UserSerializer(many=True,read_only=True)
+    quiz = QuizSerializer(read_only=True)
+    class Meta:
+        model = Game
+        fields = ['host','quiz','created_time','join_code','is_active','started_at','players']
+        read_only_fields = ['created_time']
+        
+    def create(self, validated_data : dict):
+
+        host_uid=validated_data.pop('host_uid')
+        host = User.objects.get(uid=host_uid)
+        join_code = Game.generate_join_code()
+        validated_data['join_code'] = join_code
+        game = Game.objects.create(host=host,**validated_data)
+        return game
+    def to_representation(self, instance):
+        instance.host_uid = instance.host.uid
+        return super().to_representation(instance)
