@@ -76,7 +76,7 @@ class GameDetailSerializer(serializers.ModelSerializer):
     
 class UserResultSerializer(serializers.ModelSerializer):   
     user = UserSerializer(read_only=True)
-    game = GameSerializer(read_only=True)
+    # game = GameSerializer(read_only=True)
     class Meta:
         model = UserResult
         fields = '__all__'
