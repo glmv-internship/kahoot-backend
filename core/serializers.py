@@ -33,9 +33,11 @@ class QuizSerializer(serializers.ModelSerializer):
 class GameSerializer(serializers.ModelSerializer):
     host_uid = serializers.CharField(write_only=True)
     host = UserSerializer(read_only=True)
+    quiz = QuizSerializer()
+    players = UserSerializer(many=True,read_only=True)
     class Meta:
         model = Game
-        fields = ['host','host_uid','created_time','quiz','join_code','is_active','started_at']
+        fields = ['id','host','host_uid','created_time','quiz','join_code','is_active','started_at','players']
         # depth = 1
         read_only_fields = ['join_code','is_active','started_at','created_time']
 
@@ -57,7 +59,7 @@ class GameDetailSerializer(serializers.ModelSerializer):
     quiz = QuizSerializer(read_only=True)
     class Meta:
         model = Game
-        fields = ['host','quiz','created_time','join_code','is_active','started_at','players']
+        fields = ['id','host','quiz','created_time','join_code','is_active','started_at','players']
         read_only_fields = ['created_time']
         
     def create(self, validated_data : dict):
@@ -71,3 +73,13 @@ class GameDetailSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         instance.host_uid = instance.host.uid
         return super().to_representation(instance)
+    
+class UserResultSerializer(serializers.ModelSerializer):   
+    user = UserSerializer(read_only=True)
+    game = GameSerializer()
+    class Meta:
+        model = UserResult
+        fields = '__all__'
+    
+    
+    
