@@ -33,7 +33,7 @@ class QuizSerializer(serializers.ModelSerializer):
 class GameSerializer(serializers.ModelSerializer):
     host_uid = serializers.CharField(write_only=True)
     host = UserSerializer(read_only=True)
-    quiz = QuizSerializer()
+    quiz = QuizSerializer(read_only=True)
     players = UserSerializer(many=True,read_only=True)
     class Meta:
         model = Game
@@ -76,7 +76,7 @@ class GameDetailSerializer(serializers.ModelSerializer):
     
 class UserResultSerializer(serializers.ModelSerializer):   
     user = UserSerializer(read_only=True)
-    game = GameSerializer()
+    game = GameSerializer(read_only=True)
     class Meta:
         model = UserResult
         fields = '__all__'
