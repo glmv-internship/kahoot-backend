@@ -78,7 +78,7 @@ class GameDetailSerializer(serializers.ModelSerializer):
         return super().to_representation(instance)
     
 class UserResultSerializer(serializers.ModelSerializer):   
-    # user = UserSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
     # game = GameSerializer(read_only=True)
     class Meta:
         model = UserResult
