@@ -101,17 +101,14 @@ def user_stats(request, uid):
             'username': user.nickname,
             'uid': user.uid,
             'total_games_played': user.results.count(),
-            'total_correct_answers': user.results.aggregate(Sum('score'))['score__sum'] or 0,
+            'total_score': user.results.aggregate(Sum('score'))['score__sum'] or 0,
             'last_5_games': [
                 {
                     'game_id': result.game.id,
                     'game_name': result.game.quiz.name,
                     'score': result.score,
-                    'total_questions': result.game.quiz.questions.count(),
+                    'total_questions': result.game.quiz.polls.count(),
                     'date_played': result.joined_at.strftime('%b %d, %Y, %I:%M %p'),
-                    'top_5_correct_answers': list(result.game.game_results.filter(score__gte=1)
-                                                 .order_by('-score')[:5]
-                                                 .values('question__question_text', 'score'))
                 }
                 for result in user.results.order_by('-id')[:5]
             ]
